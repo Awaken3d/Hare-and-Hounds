@@ -12,9 +12,9 @@ module gameLogic {
 
   /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
   export function getInitialBoard(): Board {
-    return [['', '', ''],
-            ['', '', ''],
-            ['', '', '']];
+    return [['D', '', ''],
+            ['D','', '', 'B'],
+            ['D', '', '']];
   }
 
   /**

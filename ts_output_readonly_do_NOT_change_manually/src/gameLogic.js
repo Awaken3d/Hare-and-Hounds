@@ -2,9 +2,9 @@ var gameLogic;
 (function (gameLogic) {
     /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
     function getInitialBoard() {
-        return [['', '', ''],
-            ['', '', ''],
-            ['', '', '']];
+        return [['D', '', ''],
+            ['D', '', '', 'B'],
+            ['D', '', '']];
     }
     gameLogic.getInitialBoard = getInitialBoard;
     /**
