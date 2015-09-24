@@ -1,6 +1,6 @@
 var gameLogic;
 (function (gameLogic) {
-    /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
+    /** Returns the initial Hare and Hounds board, which is a matrix containing ''. */
     function getInitialBoard() {
         return [['D', '', ''],
             ['D', '', '', 'B'],
@@ -8,26 +8,28 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     /**
-     * Returns true if the game ended in a tie because there are no empty cells.
-     * E.g., isTie returns true for the following board:
-     *     [['X', 'O', 'X'],
-     *      ['X', 'O', 'O'],
-     *      ['O', 'X', 'X']]
+     *
+     *
+     *     There cannot be a tie in hare and hounds
+     *
+     *
      */
-    function isTie(board) {
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                if (board[i][j] === '') {
-                    // If there is an empty cell then we do not have a tie.
-                    return false;
-                }
-            }
-        }
-        // No empty cells, so we have a tie!
-        return true;
-    }
+    /*
+   function isTie(board: Board): boolean {
+     for (var i = 0; i < 3; i++) {
+       for (var j = 0; j < 3; j++) {
+         if (board[i][j] === '') {
+           // If there is an empty cell then we do not have a tie.
+           return false;
+         }
+       }
+     }
+     // No empty cells, so we have a tie!
+     return true;
+   }
+ */
     /**
-     * Return the winner (either 'X' or 'O') or '' if there is no winner.
+     * Return the winner (either 'D' or 'B') or '' if there is no winner.
      * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
      * E.g., getWinner returns 'X' for the following board:
      *     [['X', 'O', ''],
@@ -37,7 +39,7 @@ var gameLogic;
     function getWinner(board) {
         var boardString = '';
         for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+            for (var j = 0; j < board[i].length; j++) {
                 var cell = board[i][j];
                 boardString += cell === '' ? ' ' : cell;
             }

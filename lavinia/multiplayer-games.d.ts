@@ -44,7 +44,6 @@ interface IState {
 }
 interface IIsMoveOk {
   move: IMove;
-  pawnId:number;
   turnIndexBeforeMove : number;
   turnIndexAfterMove: number;
   stateBeforeMove: IState;
