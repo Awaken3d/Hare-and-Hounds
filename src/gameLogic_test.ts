@@ -1,34 +1,36 @@
 describe("In TicTacToe", function() {
 
   function expectMove(
-      turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove, isOk: boolean): void {
+      turnIndexBeforeMove: number,pawnId:number, stateBeforeMove: IState, move: IMove, isOk: boolean): void {
     expect(gameLogic.isMoveOk({
       turnIndexBeforeMove: turnIndexBeforeMove,
+        pawnId: pawnId,
       turnIndexAfterMove: null,
       stateBeforeMove: stateBeforeMove,
-      stateAfterMove: null,
+      //stateAfterMove: null,
       move: move,
-      numberOfPlayers: null})).toBe(isOk);
+      //numberOfPlayers: null
+    })).toBe(isOk);
   }
 
-  function expectMoveOk(turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove): void {
+  function expectMoveOk(turnIndexBeforeMove: number, pawnId:number, stateBeforeMove: IState, move: IMove): void {
     expectMove(turnIndexBeforeMove, stateBeforeMove, move, true);
   }
 
-  function expectIllegalMove(turnIndexBeforeMove: number, stateBeforeMove: IState, move: IMove): void {
+  function expectIllegalMove(turnIndexBeforeMove: number, pawnId:number,stateBeforeMove: IState, move: IMove): void {
     expectMove(turnIndexBeforeMove, stateBeforeMove, move, false);
   }
 
-  it("placing X in 0x0 from initial state is legal", function() {
-    expectMoveOk(0, {},
+  it("PRWTI KINISI", function() {
+    expectMoveOk(0, 1,<IState>{},
       [{setTurn: {turnIndex : 1}},
         {set: {key: 'board', value:
-          [['X', '', ''],
-           ['', '', ''],
-           ['', '', '']]}},
-        {set: {key: 'delta', value: {row: 0, col: 0}}}]);
+          [['D1', '', ''],
+           ['D2', '', '','','B'],
+           ['D3', '', '']]}},
+        {set: {key: 'delta', value: {row: 0, col: 2}}}]);
   });
-
+/*
   it("placing O in 0x1 after X placed X in 0x0 is legal", function() {
     expectMoveOk(1,
       {board:
@@ -183,6 +185,6 @@ describe("In TicTacToe", function() {
            ['O', 'X', 'X']]}},
         {set: {key: 'delta', value: {row: 2, col: 2}}}];
     expect(angular.equals(possibleMoves, [expectedMove])).toBe(true);
-  });
+  });*/
 
 });

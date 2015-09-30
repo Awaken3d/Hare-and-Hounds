@@ -9,13 +9,23 @@ interface IState {
 }
 
 module gameLogic {
-  export interface playerPosition{
-    line:number;
-    column:number;
-  }
+
   //the variables below are used to trace previous dog and bunny positions
-  export var bunnyPosition:playerPosition = {line:0,column:0};
-  export var dogPosition:playerPosition[] = [{line:0,column:0},{line:0,column:0},{line:0,column:0}];
+    export var legalMovesDog: any = [[[[0,1],[1,1],[1,2]], [[0,2], [1,2]], [[1,3], [1,4]]],
+        [[[0,0], [1,1], [2,0]], [[0,0], [1,2], [2,0]], [[0,1], [2,1], [0,2], [1,3],[2,2]],
+            [[0,2], [2,2], [1,4]] , []],[[[1,1], [1,2], [2,1]],[[1,2], [2,2]], [[1,3], [1,4]]]];
+
+    export var legalMovesBunny: any = [[[[1,0],[0,1],[1,1],[1,2]], [[0,0],[0,2], [1,2]], [[0,1],[1,2],[1,3], [1,4]]],
+        [[], [[0,0], [1,2], [2,0]], [[0,0],[2,1],[1,1],[0,1], [2,1], [0,2], [1,3],[2,2]],
+            [[1,2],[0,2], [2,2], [1,4]] , [[0,2], [1,3], [2,2]]],
+        [[[1,0],[1,1], [1,2], [2,1]],[[2,0],[1,2],[2,2]], [[2,1],[1,3], [1,4]]]];
+
+    export interface playerPosition{
+        line:number;
+        column:number;
+    }
+    export var bunnyPosition:playerPosition = {line:0,column:0};
+    export var dogPosition:playerPosition[] = [{line:0,column:0},{line:0,column:0},{line:0,column:0}];
   /** sets initial positions for the bunny and the dogs */
   export function setInitialPositions():void{
     bunnyPosition.line = 1;
@@ -74,6 +84,23 @@ module gameLogic {
    */
   /*used to copy an array to another array by value to avoid assignment by reference, angular wouldn't work for me, i
   * have to take a look at it later*/
+
+    function arraysEqual(arr1, arr2) {
+        if(arr1 == null || arr2 == null){
+            return false;
+        }
+        if(arr1.length !== arr2.length)
+            return false;
+        for(var i = arr1.length; i--;) {
+            if(arr1[i] !== arr2[i])
+                return false;
+        }
+
+        return true;
+    }
+
+
+
   function copy(arr){
     var new_arr = arr.slice(0);
     for(var i = arr.length; i--;)
@@ -85,28 +112,72 @@ module gameLogic {
   * subtraction from pawnId can yield the same results, fix it*/
   export function createMove(
       board: Board,pawnID:number, row: number , col: number, turnIndexBeforeMove: number): IMove {
+    var moveArray:number[] = [row, col];
+
     if (!board) {
       // Initially (at the beginning of the match), the board in state is undefined.
       board = getInitialBoard();
     }
+
     if (board[row][col] !== '') {
       throw new Error("One can only make a move in an empty position!");
     }
+
+
     if (getWinner(board) !== '') {
       throw new Error("Can only make a move if the game is not over!");
     }
-    if(turnIndexBeforeMove == 1){
-      if((bunnyPosition.column == 1 && bunnyPosition.line == 0) || (bunnyPosition.column == 1 && bunnyPosition.line == 2)){
-        if((col == 1 && row == 1)|| (col == 3 && row == 1)){
-          throw new Error("Cannot move there!");
+    if(col < 0){
+      throw new Error("Column value cannot be lower than 0");
+    }
+
+    if(row < 0){
+      throw new Error("Row value cannot be lower than 0");
+    }else if(row >2){
+      throw new Error("Row value cannot be higher than 2");
+    }
+
+    if(row == 1 && col > 4 ){
+      throw new Error("Column value is too high");
+    }else if((row === 0 || row === 2) && col >2){
+      throw new Error("Column value is too high");
+    }
+
+    if(turnIndexBeforeMove === 1){
+      /*
+       if((bunnyPosition.column == 1 && bunnyPosition.line == 0) || (bunnyPosition.column == 1 && bunnyPosition.line == 2)){
+       if((col == 1 && row == 1)|| (col == 3 && row == 1)){
+       throw new Error("Cannot move there!");
+       }
+       }
+       */
+
+      /*
+       if((bunnyPosition.column == 1 && bunnyPosition.line == 1) || (bunnyPosition.column == 3 && bunnyPosition.line == 1)){
+       if((col == 1 && row == 0)|| (col == 1 && row == 2)){
+       throw new Error("Cannot move there!");
+       }
+       }
+       */
+
+      var existsInLegalMoves:boolean = false;
+      for(var i in legalMovesBunny){
+        if(arraysEqual(moveArray, legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i])){
+          existsInLegalMoves = true;
         }
       }
-      if((bunnyPosition.column - col < -1)|| (bunnyPosition.column - col > 1)){
-        throw new Error("One can only make a move one cell at a time!");
+
+      if(!existsInLegalMoves){
+        throw new Error("Cannot move there!");
       }
-      if((bunnyPosition.line - row < -1)||(bunnyPosition.line - row > 1)){
-        throw new Error("One can only make a move one cell at a time!");
-      }
+      /*
+       if((bunnyPosition.column - col < -1)|| (bunnyPosition.column - col > 1)){
+       throw new Error("One can only make a move one cell at a time!");
+       }
+       if((bunnyPosition.line - row < -1)||(bunnyPosition.line - row > 1)){
+       throw new Error("One can only make a move one cell at a time!");
+       }
+       */
     }else{
       var id:number;
       if(pawnID == 1){
@@ -116,20 +187,37 @@ module gameLogic {
       }else{
         id = 2;
       }
-      if(dogPosition[id].column > col){
-        throw new Error("Dogs can only move forward!");
-      }
-      if((dogPosition[id].column == 1 && dogPosition[id].line == 0) || (dogPosition[id].column == 1 && dogPosition[id].line == 2)){
-        if(col == 3 && row == 1){
-          throw new Error("Cannot move there!");
+      /*
+       if(dogPosition[id].column > col){
+       throw new Error("Dogs can only move forward!");
+       }
+       */
+
+      var existsInLegalMoves2:boolean = false;
+
+      for(var i in legalMovesDog){
+        if(arraysEqual(moveArray, legalMovesDog[dogPosition[id].line][dogPosition[id].column][i])){
+          existsInLegalMoves2 = true;
         }
       }
-      if((dogPosition[id].column - col < -1)|| (dogPosition[id].column - col > 1)){
-        throw new Error("One can only make a move one cell at a time!");
+
+      if(!existsInLegalMoves2){
+        throw new Error("Cannot move there!");
       }
-      if((dogPosition[id].line - row < -1)||(dogPosition[id].line - row > 1)){
-        throw new Error("One can only make a move one cell at a time!");
-      }
+
+      /*
+       if((dogPosition[id].column == 1 && dogPosition[id].line == 0) || (dogPosition[id].column == 1 && dogPosition[id].line == 2)){
+       if(col == 3 && row == 1){
+       throw new Error("Cannot move there!");
+       }
+       }
+       if((dogPosition[id].column - col < -1)|| (dogPosition[id].column - col > 1)){
+       throw new Error("One can only make a move one cell at a time!");
+       }
+       if((dogPosition[id].line - row < -1)||(dogPosition[id].line - row > 1)){
+       throw new Error("One can only make a move one cell at a time!");
+       }
+       */
     }
     // var boardAfterMove = angular.copy(board);
     var boardAfterMove = copy(board);
@@ -157,6 +245,12 @@ module gameLogic {
     }
     var delta: BoardDelta = {row: row, col: col};
 
+    for(var i in boardAfterMove){
+      for(var j in boardAfterMove[i]){
+        console.log(boardAfterMove[i][j]);
+      }
+    }
+
     return [firstOperation,
       {set: {key: 'board', value: boardAfterMove}},
       {set: {key: 'delta', value: delta}}];
@@ -172,44 +266,58 @@ module gameLogic {
     }else if(getTurns()==20){
       return 'B';
     }else if(bunnyBlocked(board)){
-      return 'H';
+      return 'D';
     }
 
     return '';
 
   }
 
-  export function isMoveOk(params: IIsMoveOk): boolean {
-    var move = params.move;
-    var turnIndexBeforeMove = params.turnIndexBeforeMove;
-    var stateBeforeMove: IState = params.stateBeforeMove;
-    var pawnId:number = params.pawnId;
-    // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
-    //var turnIndexAfterMove = params.turnIndexAfterMove;
-    //var stateAfterMove = params.stateAfterMove;
+    export function isMoveOk(params: IIsMoveOk): boolean {
+        var move = params.move;
+        var turnIndexBeforeMove = params.turnIndexBeforeMove;
+        var stateBeforeMove: IState = params.stateBeforeMove;
+        var pawnId:number = params.pawnId;
+        // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
+        //var turnIndexAfterMove = params.turnIndexAfterMove;
+        //var stateAfterMove = params.stateAfterMove;
 
-    // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-    // to verify that move is legal.
-    try {
-      // Example move:
-      // [{setTurn: {turnIndex : 1},
-      //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
-      //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
-      var deltaValue: BoardDelta = move[2].set.value;
-      var row = deltaValue.row;
-      var col = deltaValue.col;
-      var board = stateBeforeMove.board;
-      var expectedMove = createMove(board,pawnId, row, col, turnIndexBeforeMove);
-      if (!angular.equals(move, expectedMove)) {
-        return false;
-      }
-    } catch (e) {
-      // if there are any exceptions then the move is illegal
-      return false;
+        // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
+        // to verify that move is legal.
+        try {
+            // Example move:
+            // [{setTurn: {turnIndex : 1},
+            //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
+            //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
+            //var deltaValue: BoardDelta = move[2].set.value;
+            //var row = deltaValue.row;
+            //var col = deltaValue.col;
+            var row = move[2].set.value.row;
+            var col = move[2].set.value.col;
+
+            var board = stateBeforeMove.board;
+            //console.log(board);
+            /*for(var j=0;j<3;j++){
+             for(var i =0 ;i<board[j].length;i++){
+
+             console.log(j+" "+i+" "+board[j][i]);
+             }
+             }*/
+            var expectedMove = createMove(board,pawnId, row, col, turnIndexBeforeMove);
+            // if(!arraysEqual(move[2], expectedMove[1].set.value)){
+            //if (!angular.equals(move, expectedMove)) {
+            //   return false;
+            //}
+        } catch (e) {
+            // if there are any exceptions then the move is illegal
+
+            console.log(e);
+            return false;
+        }
+        incrementTurn();
+        return true;
     }
-    incrementTurn();
-    return true;
-  }
+
 
 
 
