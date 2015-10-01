@@ -18,18 +18,13 @@ var gameLogic;
     }
     gameLogic.setInitialPositions = setInitialPositions;
     //counts the number of turns taken by both players, if it exceeds 20 the game is over and the bunny wins
-    var turnsTake = 0;
+    gameLogic.turnsTake = 0;
     function incrementTurn() {
         this.turnsTake++;
     }
     gameLogic.incrementTurn = incrementTurn;
-    function getTurns() {
-        return this.turnsTake;
-    }
-    gameLogic.getTurns = getTurns;
     /** Returns the initial Hare and Hounds board, which is a 2d matrix  */
     function getInitialBoard() {
-        //bunnyPosition.line =1;
         setInitialPositions();
         return [['D1', '', ''], ['D2', '', '', '', 'B'], ['D3', '', '']];
     }
@@ -45,21 +40,6 @@ var gameLogic;
         }
     }
     gameLogic.bunnyBlocked = bunnyBlocked;
-    /*
-     export function getPossibleMoves(board: Board, turnIndexBeforeMove: number): IMove[] {
-     var possibleMoves: IMove[] = [];
-     for (var i = 0; i < 3; i++) {
-     for (var j = 0; j < board[i].length; j++) {
-     try {
-     possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
-     } catch (e) {
-     // The cell in that position was full.
-     }
-     }
-     }
-     return possibleMoves;
-     }
-     */
     /*used to copy an array to another array by value to avoid assignment by reference, angular wouldn't work for me, i
     * have to take a look at it later*/
     function arraysEqual(arr1, arr2) {
@@ -74,6 +54,7 @@ var gameLogic;
         }
         return true;
     }
+    gameLogic.arraysEqual = arraysEqual;
     function copy(arr) {
         var new_arr = arr.slice(0);
         for (var i = arr.length; i--;)
@@ -88,12 +69,6 @@ var gameLogic;
         if (!board) {
             // Initially (at the beginning of the match), the board in state is undefined.
             board = getInitialBoard();
-        }
-        if (board[row][col] !== '') {
-            throw new Error("One can only make a move in an empty position!");
-        }
-        if (getWinner(board) !== '') {
-            throw new Error("Can only make a move if the game is not over!");
         }
         if (col < 0) {
             throw new Error("Column value cannot be lower than 0");
@@ -110,21 +85,13 @@ var gameLogic;
         else if ((row === 0 || row === 2) && col > 2) {
             throw new Error("Column value is too high");
         }
+        if (board[row][col] !== '') {
+            throw new Error("One can only make a move in an empty position!");
+        }
+        if (getWinner(board) !== '') {
+            throw new Error("Can only make a move if the game is not over!");
+        }
         if (turnIndexBeforeMove === 1) {
-            /*
-             if((bunnyPosition.column == 1 && bunnyPosition.line == 0) || (bunnyPosition.column == 1 && bunnyPosition.line == 2)){
-             if((col == 1 && row == 1)|| (col == 3 && row == 1)){
-             throw new Error("Cannot move there!");
-             }
-             }
-             */
-            /*
-             if((bunnyPosition.column == 1 && bunnyPosition.line == 1) || (bunnyPosition.column == 3 && bunnyPosition.line == 1)){
-             if((col == 1 && row == 0)|| (col == 1 && row == 2)){
-             throw new Error("Cannot move there!");
-             }
-             }
-             */
             var existsInLegalMoves = false;
             for (var i in gameLogic.legalMovesBunny) {
                 if (arraysEqual(moveArray, gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i])) {
@@ -132,7 +99,7 @@ var gameLogic;
                 }
             }
             if (!existsInLegalMoves) {
-                throw new Error("Cannot move there!");
+                throw new Error("Cannot move there bunny!");
             }
         }
         else {
@@ -146,11 +113,6 @@ var gameLogic;
             else {
                 id = 2;
             }
-            /*
-             if(dogPosition[id].column > col){
-             throw new Error("Dogs can only move forward!");
-             }
-             */
             var existsInLegalMoves2 = false;
             for (var i in gameLogic.legalMovesDog) {
                 if (arraysEqual(moveArray, gameLogic.legalMovesDog[gameLogic.dogPosition[id].line][gameLogic.dogPosition[id].column][i])) {
@@ -158,12 +120,11 @@ var gameLogic;
                 }
             }
             if (!existsInLegalMoves2) {
-                throw new Error("Cannot move there!");
+                throw new Error("Cannot move there dog!");
             }
         }
         // var boardAfterMove = angular.copy(board);
         var boardAfterMove = copy(board);
-        boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'D' : 'B';
         if (turnIndexBeforeMove === 1) {
             boardAfterMove[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column] = '';
             boardAfterMove[row][col] = 'B';
@@ -187,21 +148,15 @@ var gameLogic;
             firstOperation = { setTurn: { turnIndex: 1 - turnIndexBeforeMove } };
         }
         var delta = { row: row, col: col };
-        for (var i in boardAfterMove) {
-            for (var j in boardAfterMove[i]) {
-                console.log(boardAfterMove[i][j]);
-            }
-        }
         return [firstOperation, { set: { key: 'board', value: boardAfterMove } }, { set: { key: 'delta', value: delta } }];
     }
     gameLogic.createMove = createMove;
     //checks if the game is over
     function getWinner(board) {
-        // var counter : turnCounter = new turnCounter();
-        if (gameLogic.bunnyPosition.column <= gameLogic.dogPosition[0].column && gameLogic.bunnyPosition.column <= gameLogic.dogPosition[1].column && gameLogic.bunnyPosition.column <= gameLogic.dogPosition[3].column) {
+        if (gameLogic.bunnyPosition.column <= gameLogic.dogPosition[0].column && gameLogic.bunnyPosition.column <= gameLogic.dogPosition[1].column && gameLogic.bunnyPosition.column <= gameLogic.dogPosition[2].column) {
             return 'B';
         }
-        else if (getTurns() == 20) {
+        else if (gameLogic.turnsTake === 20) {
             return 'B';
         }
         else if (bunnyBlocked(board)) {
@@ -220,23 +175,12 @@ var gameLogic;
             // [{setTurn: {turnIndex : 1},
             //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
             //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
-            //var deltaValue: BoardDelta = move[2].set.value;
-            //var row = deltaValue.row;
-            //var col = deltaValue.col;
             var row = move[2].set.value.row;
             var col = move[2].set.value.col;
             var board = stateBeforeMove.board;
-            //console.log(board);
-            /*for(var j=0;j<3;j++){
-             for(var i =0 ;i<board[j].length;i++){
-
-             console.log(j+" "+i+" "+board[j][i]);
-             }
-             }*/
             var expectedMove = createMove(board, pawnId, row, col, turnIndexBeforeMove);
         }
         catch (e) {
-            // if there are any exceptions then the move is illegal
             console.log(e);
             return false;
         }
