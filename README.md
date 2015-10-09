@@ -1,4 +1,3 @@
-TicTacToe
-=========
+Hare and Hounds
 
-TicTacToe game
+Programmed in a garage next to a lamborghini.

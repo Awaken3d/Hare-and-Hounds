@@ -7,29 +7,38 @@ describe('TicTacToe', function() {
   }
 
   beforeEach(function() {
-    getPage('game.min.html');
+    getPage('index.min.html');
   });
 
   function getDiv(row: number, col: number) {
     return element(by.id('e2e_test_div_' + row + 'x' + col));
   }
 
-  function getPiece(row: number, col: number, pieceKind: string) {
-    return element(by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col));
-  }
-
-  function expectPiece(row: number, col: number, pieceKind: string) {
+  function expectPieceKindDisplayed(row: number, col: number, pieceKind: string, isDisplayed: boolean) {
+    let selector = by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col);
     // Careful when using animations and asserting isDisplayed:
     // Originally, my animation started from {opacity: 0;}
     // And then the image wasn't displayed.
     // I changed it to start from {opacity: 0.1;}
-    expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false);
-    expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false);
+    if (isDisplayed) {
+      expect(element(selector).isDisplayed()).toEqual(true);
+    } else {
+      element.all(selector).then(function(items) {
+        expect(items.length).toBe(0);
+      });
+    }
+  }
+
+  function expectPiece(row: number, col: number, pieceKind: string) {
+    expectPieceKindDisplayed(row, col, 'X', pieceKind === "X");
+    expectPieceKindDisplayed(row, col, 'O', pieceKind === "O");
   }
 
   function expectBoard(board: Board) {
-    for (var row = 0; row < 3; row++) {
-      for (var col = 0; col < 3; col++) {
+    // I can't use gameLogic.ROWS/COLS (instead of 3) because gameLogic is not defined
+    // in end-to-end tests.
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
         expectPiece(row, col, board[row][col]);
       }
     }
@@ -70,7 +79,7 @@ describe('TicTacToe', function() {
   });
 
   it('should end game if X wins', function () {
-    for (var col = 0; col < 3; col++) {
+    for (let col = 0; col < 3; col++) {
       clickDivAndExpectPiece(1, col, "X");
       // After the game ends, player "O" click (in cell 2x2) will be ignored.
       clickDivAndExpectPiece(2, col, col === 2 ? "" : "O");
@@ -98,14 +107,14 @@ describe('TicTacToe', function() {
   });
 
   it('with playAgainstTheComputer should work', function () {
-    getPage('game.min.html?playAgainstTheComputer');
+    getPage('index.min.html?playAgainstTheComputer');
     clickDivAndExpectPiece(1, 0, "X");
     browser.sleep(2000); // wait for AI to make at least one move
     expectPiece(0, 0, 'O');
   });
 
   it('with onlyAIs should work', function () {
-    browser.get('game.min.html?onlyAIs');
+    browser.get('index.min.html?onlyAIs');
     browser.sleep(2000); // wait for AI to make at least one move
     expectPiece(0, 0, 'X');
   });

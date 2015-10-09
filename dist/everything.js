@@ -1,10 +1,17 @@
 var gameLogic;
 (function (gameLogic) {
-    /** Returns the initial TicTacToe board, which is a 3x3 matrix containing ''. */
+    gameLogic.ROWS = 3;
+    gameLogic.COLS = 3;
+    /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
     function getInitialBoard() {
-        return [['', '', ''],
-            ['', '', ''],
-            ['', '', '']];
+        var board = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            board[i] = [];
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                board[i][j] = '';
+            }
+        }
+        return board;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     /**
@@ -15,8 +22,8 @@ var gameLogic;
      *      ['O', 'X', 'X']]
      */
     function isTie(board) {
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
                 if (board[i][j] === '') {
                     // If there is an empty cell then we do not have a tie.
                     return false;
@@ -36,8 +43,8 @@ var gameLogic;
      */
     function getWinner(board) {
         var boardString = '';
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
                 var cell = board[i][j];
                 boardString += cell === '' ? ' ' : cell;
             }
@@ -52,8 +59,8 @@ var gameLogic;
             'X...X...X',
             '..X.X.X..'
         ];
-        for (i = 0; i < win_patterns.length; i++) {
-            var win_pattern = win_patterns[i];
+        for (var _i = 0; _i < win_patterns.length; _i++) {
+            var win_pattern = win_patterns[_i];
             var x_regexp = new RegExp(win_pattern);
             var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
             if (x_regexp.test(boardString)) {
@@ -65,24 +72,6 @@ var gameLogic;
         }
         return '';
     }
-    /**
-     * Returns all the possible moves for the given board and turnIndexBeforeMove.
-     * Returns an empty array if the game is over.
-     */
-    function getPossibleMoves(board, turnIndexBeforeMove) {
-        var possibleMoves = [];
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                try {
-                    possibleMoves.push(createMove(board, i, j, turnIndexBeforeMove));
-                }
-                catch (e) {
-                }
-            }
-        }
-        return possibleMoves;
-    }
-    gameLogic.getPossibleMoves = getPossibleMoves;
     /**
      * Returns the move that should be performed when player
      * with index turnIndexBeforeMove makes a move in cell row X col.
@@ -121,8 +110,8 @@ var gameLogic;
         var turnIndexBeforeMove = params.turnIndexBeforeMove;
         var stateBeforeMove = params.stateBeforeMove;
         // The state and turn after move are not needed in TicTacToe (or in any game where all state is public).
-        //var turnIndexAfterMove = params.turnIndexAfterMove;
-        //var stateAfterMove = params.stateAfterMove;
+        //let turnIndexAfterMove = params.turnIndexAfterMove;
+        //let stateAfterMove = params.stateAfterMove;
         // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
         // to verify that move is legal.
         try {
@@ -152,8 +141,8 @@ var gameLogic;
     var animationEnded = false;
     var canMakeMove = false;
     var isComputerTurn = false;
+    var lastUpdateUI = null;
     var state = null;
-    var turnIndex = null;
     game.isHelpModalShown = false;
     function init() {
         console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
@@ -180,19 +169,17 @@ var gameLogic;
         });
     }
     function sendComputerMove() {
-        gameService.makeMove(aiService.createComputerMove(state.board, turnIndex, 
-        // at most 1 second for the AI to choose a move (but might be much quicker)
-        { millisecondsLimit: 1000 }));
+        gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
     }
     function updateUI(params) {
         animationEnded = false;
+        lastUpdateUI = params;
         state = params.stateAfterMove;
         if (!state.board) {
             state.board = gameLogic.getInitialBoard();
         }
         canMakeMove = params.turnIndexAfterMove >= 0 &&
             params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
-        turnIndex = params.turnIndexAfterMove;
         // Is it the computer's turn?
         isComputerTurn = canMakeMove &&
             params.playersInfo[params.yourPlayerIndex].playerId === '';
@@ -219,7 +206,7 @@ var gameLogic;
             return;
         }
         try {
-            var move = gameLogic.createMove(state.board, row, col, turnIndex);
+            var move = gameLogic.createMove(state.board, row, col, lastUpdateUI.turnIndexAfterMove);
             canMakeMove = false; // to prevent making another move
             gameService.makeMove(move);
         }
@@ -249,7 +236,7 @@ var gameLogic;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
 })(game || (game = {}));
-angular.module('myApp', ['ngTouch', 'ui.bootstrap'])
+angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
     .run(['initGameServices', function (initGameServices) {
         $rootScope['game'] = game;
         translate.setLanguage('en', {
@@ -262,6 +249,31 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap'])
     }]);
 ;var aiService;
 (function (aiService) {
+    /** Returns the move that the computer player should do for the given updateUI. */
+    function findComputerMove(updateUI) {
+        return createComputerMove(updateUI.stateAfterMove.board, updateUI.turnIndexAfterMove, 
+        // at most 1 second for the AI to choose a move (but might be much quicker)
+        { millisecondsLimit: 1000 });
+    }
+    aiService.findComputerMove = findComputerMove;
+    /**
+     * Returns all the possible moves for the given board and turnIndexBeforeMove.
+     * Returns an empty array if the game is over.
+     */
+    function getPossibleMoves(board, turnIndexBeforeMove) {
+        var possibleMoves = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                try {
+                    possibleMoves.push(gameLogic.createMove(board, i, j, turnIndexBeforeMove));
+                }
+                catch (e) {
+                }
+            }
+        }
+        return possibleMoves;
+    }
+    aiService.getPossibleMoves = getPossibleMoves;
     /**
      * Returns the move that the computer player should do for the given board.
      * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
@@ -274,9 +286,7 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap'])
         // 0) endMatch or setTurn
         // 1) {set: {key: 'board', value: ...}}
         // 2) {set: {key: 'delta', value: ...}}]
-        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, 
-        // If you want to see debugging output in the console, then surf to game.html?debug
-        window.location.search === '?debug' ? getDebugStateToString : null, alphaBetaLimits);
+        return alphaBetaService.alphaBetaDecision([null, { set: { key: 'board', value: board } }], playerIndex, getNextStates, getStateScoreForIndex0, null, alphaBetaLimits);
     }
     aiService.createComputerMove = createComputerMove;
     function getStateScoreForIndex0(move, playerIndex) {
@@ -289,9 +299,6 @@ angular.module('myApp', ['ngTouch', 'ui.bootstrap'])
         return 0;
     }
     function getNextStates(move, playerIndex) {
-        return gameLogic.getPossibleMoves(move[1].set.value, playerIndex);
-    }
-    function getDebugStateToString(move) {
-        return "\n" + move[1].set.value.join("\n") + "\n";
+        return getPossibleMoves(move[1].set.value, playerIndex);
     }
 })(aiService || (aiService = {}));

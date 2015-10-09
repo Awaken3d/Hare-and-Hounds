@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     processhtml: {
       dist: {
         files: {
-          'game.min.html': ['game.html']
+          'index.min.html': ['index.html']
         }
       }
     },
@@ -98,6 +98,7 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', [
+      'karma',
       'concat', 'uglify',
       'processhtml', 'manifest',
       'http-server', 'protractor']);

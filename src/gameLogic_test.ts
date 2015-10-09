@@ -1,4 +1,4 @@
-describe("In Hare and Hounds", function() {
+/*describe("In Hare and Hounds", function() {
 
 
     function expectMove(
@@ -177,7 +177,7 @@ describe("In Hare and Hounds", function() {
        gameLogic.turnsTake = 20;
 
         winnerFunction(b,'B');
-    });
+    });*/
 
    /* it("end game test", function() {
         var b = gameLogic.getInitialBoard();
@@ -210,6 +210,5 @@ describe("In Hare and Hounds", function() {
         //expectIllegalMove(params.turnIndexBeforeMove,params.pawnId,{stateBeforeMove:params.stateBeforeMove},params.move);
         withParam(params,true);
     });*/
-    /*
 
-
+//});
