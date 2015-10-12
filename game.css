@@ -1,8 +1,18 @@
 .r {
-  border-right: 4pt solid black;
+  border-right: 4pt solid white;
 }
 .b {
   border-bottom: 4pt solid black;
+}
+
+.second {
+    border:5px solid white
+}
+.cell {
+    border:1px solid green
+}
+#center {
+    border:5px solid red
 }
 
 .slowlyAppear {
