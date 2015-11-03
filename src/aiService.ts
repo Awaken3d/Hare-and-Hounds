@@ -12,7 +12,7 @@ module aiService {
   }*/
 
 
-export let dogId;
+export let dogId:number;
 
 export function setDogId(id:number){
   dogId = id;
@@ -22,8 +22,8 @@ export function createComputerMove(
     board: Board, playerIndex: number){
 
       let pawn = 4;
-      let positions;
-      let result ;
+      let positions:any;
+      let result:any ;
       if(playerIndex === 0){
         pawn = Math.floor(Math.random() * 3 );
         setDogId(pawn+1);
@@ -42,7 +42,7 @@ export function createComputerMove(
 
       }else{
         positions = gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column];
-        let y;
+        let y:any;
         while(result === undefined){
           y = positions[Math.floor(Math.random() * positions.length )];
           try{

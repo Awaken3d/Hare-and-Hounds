@@ -1,13 +1,63 @@
 var game;
 (function (game) {
+    game.testString = "hello";
+    function sayHello() {
+        console.log(this.testString);
+    }
+    game.sayHello = sayHello;
+    ;
+    function printBoard() {
+        for (var i = 0; i < state.board.length; i++) {
+            for (var j = 0; j < state.board[i].length; j++) {
+                console.log(state.board[i][j]);
+            }
+        }
+    }
+    game.printBoard = printBoard;
+    function getId(row, col) {
+        if (state.board[row][col]) {
+            game.pawnTag = state.board[row][col].charAt(0);
+            if (game.pawnTag === 'D') {
+                game.pawnTag = state.board[row][col].charAt(1);
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    game.getId = getId;
     var animationEnded = false;
+    var numberOfClicks = 0; //counts the number of clicks to make sure that a legitimate pawn was selected to move
+    var rowToMove;
+    var colToMove;
     var canMakeMove = false;
     var isComputerTurn = false;
     var lastUpdateUI = null;
     var state = null;
     game.isHelpModalShown = false;
+    var turnIndex = null;
+    var pawnId;
+    function getArray(row) {
+        if (row === 1) {
+            return [0, 1, 2, 3, 4];
+        }
+        else {
+            return [0, 1, 2];
+        }
+    }
+    game.getArray = getArray;
+    function getColumn(row, col) {
+        if (row === 1) {
+            return col;
+        }
+        else {
+            return col + 1;
+        }
+    }
+    game.getColumn = getColumn;
     function init() {
-        console.log("Translation of 'RULES_OF_TICTACTOE' is " + translate('RULES_OF_TICTACTOE'));
+        console.log("Translation of 'RULES_OF_HARE_AND_HOUNDS' is " + translate('RULES_OF_HARE_AND_HOUNDS'));
         resizeGameAreaService.setWidthToHeight(1);
         gameService.setGame({
             minNumberOfPlayers: 2,
@@ -31,7 +81,7 @@ var game;
         });
     }
     function sendComputerMove() {
-        gameService.makeMove(aiService.findComputerMove(lastUpdateUI));
+        gameService.makeMove(aiService.createComputerMove(state.board, turnIndex));
     }
     function updateUI(params) {
         animationEnded = false;
@@ -42,6 +92,7 @@ var game;
         }
         canMakeMove = params.turnIndexAfterMove >= 0 &&
             params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
+        turnIndex = params.turnIndexAfterMove;
         // Is it the computer's turn?
         isComputerTurn = canMakeMove &&
             params.playersInfo[params.yourPlayerIndex].playerId === '';
@@ -67,14 +118,35 @@ var game;
         if (!canMakeMove) {
             return;
         }
-        try {
-            var move = gameLogic.createMove(state.board, row, col, lastUpdateUI.turnIndexAfterMove);
-            canMakeMove = false; // to prevent making another move
-            gameService.makeMove(move);
+        if (numberOfClicks === 0) {
+            if (state.board[row][col]) {
+                if (state.board[row][col].charAt(0) === 'D') {
+                    pawnId = +state.board[row][col].charAt(1);
+                }
+                else {
+                    pawnId = 4;
+                }
+                numberOfClicks++;
+            }
+            else {
+                console.log("You clicked on an empty space!!");
+            }
         }
-        catch (e) {
-            log.info(["Cell is already full in position:", row, col]);
-            return;
+        else {
+            try {
+                //  let move = gameLogic.createMove(
+                //    state.board, 1,row, col, lastUpdateUI.turnIndexAfterMove);
+                var move = gameLogic.createMove(state.board, pawnId, row, col, lastUpdateUI.turnIndexAfterMove);
+                console.log("index used and sent " + lastUpdateUI.turnIndexAfterMove);
+                canMakeMove = false; // to prevent making another move
+                gameService.makeMove(move);
+                numberOfClicks = 0;
+            }
+            catch (e) {
+                //log.info(["Cell is already full in position:", row, col]);
+                log.info(e);
+                return;
+            }
         }
     }
     game.cellClicked = cellClicked;
@@ -99,12 +171,12 @@ var game;
     game.shouldSlowlyAppear = shouldSlowlyAppear;
 })(game || (game = {}));
 angular.module('myApp', ['ngTouch', 'ui.bootstrap', 'gameServices'])
-    .run(['initGameServices', function (initGameServices) {
+    .run([function () {
         $rootScope['game'] = game;
         translate.setLanguage('en', {
-            RULES_OF_TICTACTOE: "Rules of TicTacToe",
-            RULES_SLIDE1: "You and your opponent take turns to mark the grid in an empty spot. The first mark is X, then O, then X, then O, etc.",
-            RULES_SLIDE2: "The first to mark a whole row, column or diagonal wins.",
+            RULES_OF_HARE_AND_HOUNDS: "Rules of Hare and Hounds",
+            RULES_SLIDE1: "Hare is trying to avoid the hounds and reach the other side of the board, while the hounds try to block it",
+            RULES_SLIDE2: "All pieces can be moved one space. Hounds can not move backwards while the hare can move anywhere it wants",
             CLOSE: "Close"
         });
         game.init();

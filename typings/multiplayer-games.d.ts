@@ -48,8 +48,8 @@ interface IIsMoveOk {
   turnIndexBeforeMove : number;
   turnIndexAfterMove: number;
   stateBeforeMove: IState;
-  //stateAfterMove: IState;
-  //numberOfPlayers: number;
+  stateAfterMove: IState;
+  numberOfPlayers: number;
 }
 interface IPlayerInfo {
   avatarImageUrl: string;

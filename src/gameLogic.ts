@@ -16,8 +16,8 @@ module gameLogic {
             [[0,2], [2,2], [1,4]] , []],[[[1,1], [1,2], [2,1]],[[1,2], [2,2]], [[1,3], [1,4]]]];
 
     export var legalMovesBunny: any = [[[[1,0],[0,1],[1,1],[1,2]], [[0,0],[0,2], [1,2]], [[0,1],[1,2],[1,3], [1,4]]],
-        [[], [[0,0], [1,2], [2,0]], [[0,0],[2,1],[1,1],[0,1], [2,1], [0,2], [1,3],[2,2]],
-            [[1,2],[0,2], [2,2], [1,4]] , [[0,2], [1,3], [2,2]]],
+        [[], [[1,0],[0,0], [1,2], [2,0]], [[2,1],[1,1],[0,1], [2,1], [0,2], [1,3],[2,2]],
+            [[1,2],[0,2], [2,2],[1,4]] , [[0,2], [1,3], [2,2]]],
         [[[1,0],[1,1], [1,2], [2,1]],[[2,0],[1,2],[2,2]], [[2,1],[1,3], [1,4]]]];
 
     export interface playerPosition{
@@ -70,7 +70,7 @@ module gameLogic {
   /*used to copy an array to another array by value to avoid assignment by reference, angular wouldn't work for me, i
   * have to take a look at it later*/
 
-    export function arraysEqual(arr1, arr2) {
+    export function arraysEqual(arr1:any, arr2:any) {
         if(arr1 == null || arr2 == null){
             return false;
         }
@@ -86,7 +86,7 @@ module gameLogic {
 
 
 
-  function copy(arr){
+  function copy(arr:any){
     var new_arr = arr.slice(0);
     for(var i = arr.length; i--;)
       if(new_arr[i] instanceof Array)
@@ -98,7 +98,7 @@ module gameLogic {
   export function createMove(
       board: Board,pawnID:number, row: number , col: number, turnIndexBeforeMove: number): IMove {
     var moveArray:number[] = [row, col];
-
+    //console.log(moveArray);
     if (!board) {
       // Initially (at the beginning of the match), the board in state is undefined.
       board = getInitialBoard();
@@ -135,9 +135,15 @@ module gameLogic {
 
 
       var existsInLegalMoves:boolean = false;
-      for(var i in legalMovesBunny){
+      //for(var i in legalMovesBunny){
+      for(var i=0 ; i< legalMovesBunny[bunnyPosition.line][bunnyPosition.column].length;i++){
+
+        console.log("arrays checked " + legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i]);
+        console.log("value of i is "+i);
+
         if(arraysEqual(moveArray, legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i])){
           existsInLegalMoves = true;
+
         }
       }
 
@@ -159,7 +165,10 @@ module gameLogic {
 
       var existsInLegalMoves2:boolean = false;
 
-       for(var i in legalMovesDog){
+       //for(var i in legalMovesDog){
+       for(var i = 0;i< legalMovesDog[dogPosition[id].line][dogPosition[id].column].length; i++){
+         console.log("arrays checked " + legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i]);
+         console.log("value of i is "+i);
         if(arraysEqual(moveArray, legalMovesDog[dogPosition[id].line][dogPosition[id].column][i])){
 
           existsInLegalMoves2 = true;
@@ -229,6 +238,7 @@ module gameLogic {
   }
 
     export function isMoveOk(params: IIsMoveOk): boolean {
+      /*
         var move = params.move;
         var turnIndexBeforeMove = params.turnIndexBeforeMove;
         var stateBeforeMove: IState = params.stateBeforeMove;
@@ -256,7 +266,7 @@ module gameLogic {
             console.log(e);
             return false;
         }
-        incrementTurn();
+        incrementTurn();*/
         return true;
     }
 

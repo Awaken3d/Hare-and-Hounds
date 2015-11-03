@@ -5,7 +5,7 @@ var gameLogic;
         [[[0, 0], [1, 1], [2, 0]], [[0, 0], [1, 2], [2, 0]], [[0, 1], [2, 1], [0, 2], [1, 3], [2, 2]],
             [[0, 2], [2, 2], [1, 4]], []], [[[1, 1], [1, 2], [2, 1]], [[1, 2], [2, 2]], [[1, 3], [1, 4]]]];
     gameLogic.legalMovesBunny = [[[[1, 0], [0, 1], [1, 1], [1, 2]], [[0, 0], [0, 2], [1, 2]], [[0, 1], [1, 2], [1, 3], [1, 4]]],
-        [[], [[0, 0], [1, 2], [2, 0]], [[0, 0], [2, 1], [1, 1], [0, 1], [2, 1], [0, 2], [1, 3], [2, 2]],
+        [[], [[1, 0], [0, 0], [1, 2], [2, 0]], [[2, 1], [1, 1], [0, 1], [2, 1], [0, 2], [1, 3], [2, 2]],
             [[1, 2], [0, 2], [2, 2], [1, 4]], [[0, 2], [1, 3], [2, 2]]],
         [[[1, 0], [1, 1], [1, 2], [2, 1]], [[2, 0], [1, 2], [2, 2]], [[2, 1], [1, 3], [1, 4]]]];
     gameLogic.bunnyPosition = { line: 0, column: 0 };
@@ -75,6 +75,7 @@ var gameLogic;
     * subtraction from pawnId can yield the same results, fix it*/
     function createMove(board, pawnID, row, col, turnIndexBeforeMove) {
         var moveArray = [row, col];
+        //console.log(moveArray);
         if (!board) {
             // Initially (at the beginning of the match), the board in state is undefined.
             board = getInitialBoard();
@@ -102,7 +103,10 @@ var gameLogic;
         }
         if (turnIndexBeforeMove === 1) {
             var existsInLegalMoves = false;
-            for (var i in gameLogic.legalMovesBunny) {
+            //for(var i in legalMovesBunny){
+            for (var i = 0; i < gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column].length; i++) {
+                console.log("arrays checked " + gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i]);
+                console.log("value of i is " + i);
                 if (arraysEqual(moveArray, gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i])) {
                     existsInLegalMoves = true;
                 }
@@ -123,7 +127,10 @@ var gameLogic;
                 id = 2;
             }
             var existsInLegalMoves2 = false;
-            for (var i in gameLogic.legalMovesDog) {
+            //for(var i in legalMovesDog){
+            for (var i = 0; i < gameLogic.legalMovesDog[gameLogic.dogPosition[id].line][gameLogic.dogPosition[id].column].length; i++) {
+                console.log("arrays checked " + gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i]);
+                console.log("value of i is " + i);
                 if (arraysEqual(moveArray, gameLogic.legalMovesDog[gameLogic.dogPosition[id].line][gameLogic.dogPosition[id].column][i])) {
                     existsInLegalMoves2 = true;
                 }
@@ -179,27 +186,35 @@ var gameLogic;
     }
     gameLogic.getWinner = getWinner;
     function isMoveOk(params) {
-        var move = params.move;
-        var turnIndexBeforeMove = params.turnIndexBeforeMove;
-        var stateBeforeMove = params.stateBeforeMove;
-        var pawnId = params.pawnId;
-        // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
-        // to verify that move is legal.
-        try {
-            // Example move:
-            // [{setTurn: {turnIndex : 1},
-            //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
-            //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
-            var row = move[2].set.value.row;
-            var col = move[2].set.value.col;
-            var board = stateBeforeMove.board;
-            var expectedMove = createMove(board, pawnId, row, col, turnIndexBeforeMove);
-        }
-        catch (e) {
-            console.log(e);
-            return false;
-        }
-        incrementTurn();
+        /*
+          var move = params.move;
+          var turnIndexBeforeMove = params.turnIndexBeforeMove;
+          var stateBeforeMove: IState = params.stateBeforeMove;
+  
+          var pawnId:number = params.pawnId;
+  
+  
+          // We can assume that turnIndexBeforeMove and stateBeforeMove are legal, and we need
+          // to verify that move is legal.
+          try {
+              // Example move:
+              // [{setTurn: {turnIndex : 1},
+              //  {set: {key: 'board', value: [['X', '', ''], ['', '', ''], ['', '', '']]}},
+              //  {set: {key: 'delta', value: {row: 0, col: 0}}}]
+  
+              var row = move[2].set.value.row;
+              var col = move[2].set.value.col;
+  
+              var board = stateBeforeMove.board;
+  
+              var expectedMove = createMove(board,pawnId, row, col, turnIndexBeforeMove);
+  
+          } catch (e) {
+  
+              console.log(e);
+              return false;
+          }
+          incrementTurn();*/
         return true;
     }
     gameLogic.isMoveOk = isMoveOk;
