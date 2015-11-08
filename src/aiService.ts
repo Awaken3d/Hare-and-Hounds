@@ -20,7 +20,7 @@ export function setDogId(id:number){
 
 export function createComputerMove(
     board: Board, playerIndex: number){
-
+      console.log("ai has been summoned");
       let pawn = 4;
       let positions:any;
       let result:any ;

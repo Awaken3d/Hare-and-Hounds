@@ -5,6 +5,7 @@ var aiService;
     }
     aiService.setDogId = setDogId;
     function createComputerMove(board, playerIndex) {
+        console.log("ai has been summoned");
         var pawn = 4;
         var positions;
         var result;
