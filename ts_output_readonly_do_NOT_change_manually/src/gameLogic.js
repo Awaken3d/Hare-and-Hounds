@@ -75,6 +75,8 @@ var gameLogic;
     * subtraction from pawnId can yield the same results, fix it*/
     function createMove(board, pawnID, row, col, turnIndexBeforeMove) {
         var moveArray = [row, col];
+        console.log(" creating move to row " + row + " and col " + col);
+        console.log("and id is " + pawnID);
         //console.log(moveArray);
         if (!board) {
             // Initially (at the beginning of the match), the board in state is undefined.
@@ -105,8 +107,8 @@ var gameLogic;
             var existsInLegalMoves = false;
             //for(var i in legalMovesBunny){
             for (var i = 0; i < gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column].length; i++) {
-                console.log("arrays checked " + gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i]);
-                console.log("value of i is " + i);
+                //console.log("arrays checked " + legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i]);
+                //console.log("value of i is "+i);
                 if (arraysEqual(moveArray, gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i])) {
                     existsInLegalMoves = true;
                 }
@@ -129,8 +131,8 @@ var gameLogic;
             var existsInLegalMoves2 = false;
             //for(var i in legalMovesDog){
             for (var i = 0; i < gameLogic.legalMovesDog[gameLogic.dogPosition[id].line][gameLogic.dogPosition[id].column].length; i++) {
-                console.log("arrays checked " + gameLogic.legalMovesBunny[gameLogic.bunnyPosition.line][gameLogic.bunnyPosition.column][i]);
-                console.log("value of i is " + i);
+                //console.log("arrays checked " + legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i]);
+                //console.log("value of i is "+i);
                 if (arraysEqual(moveArray, gameLogic.legalMovesDog[gameLogic.dogPosition[id].line][gameLogic.dogPosition[id].column][i])) {
                     existsInLegalMoves2 = true;
                 }

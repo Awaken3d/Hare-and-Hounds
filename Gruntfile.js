@@ -100,7 +100,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [
       'karma',
       'concat', 'uglify',
-      'processhtml', 'manifest',
-      'http-server', 'protractor']);
+      'processhtml', 'manifest']);
 
 };

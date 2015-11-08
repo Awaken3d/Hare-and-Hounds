@@ -95,7 +95,7 @@
 
              <div class="second"  ng-repeat="row in [0,1,2]" style="position:absolute; top:{{row*33}}%; left:0%; width:100%; height:33%">
                  <div class="cell" ng-repeat="col in game.getArray(row)" ng-click = "game.cellClicked(row,col)" style="position:absolute; top:0;left: {{game.getColumn(row, col)*20}}%;width:20%; height:100%">
-                   <svg ng-if="game.getId(row, col)" width="100%" height="100%">
+                   <svg ng-if="game.getId(row, col)" id = "{{game.pawnTag}}" width="100%" height="100%">
                        <g>
                            <rect x="0" y="0" width="100%" height="100%" stroke="yellow" stroke-width="8" fill="green" />
                            <text x="35%" y="60%" font-family="Verdana" font-size="55" fill="blue">{{game.pawnTag}}</text>
