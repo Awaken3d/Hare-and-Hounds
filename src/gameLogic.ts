@@ -16,9 +16,9 @@ module gameLogic {
             [[0,2], [2,2], [1,4]] , []],[[[1,1], [1,2], [2,1]],[[1,2], [2,2]], [[1,3], [1,4]]]];
 
     export var legalMovesBunny: any = [[[[1,0],[0,1],[1,1],[1,2]], [[0,0],[0,2], [1,2]], [[0,1],[1,2],[1,3], [1,4]]],
-        [[], [[1,0],[0,0], [1,2], [2,0]], [[2,1],[1,1],[0,1], [2,1], [0,2], [1,3],[2,2]],
+        [[], [[1,0],[0,0], [1,2], [2,0]], [[0,0],[0,1],[0,2],[1,1], [1,3],[2,0],[2,1],[2,2]],
             [[1,2],[0,2], [2,2],[1,4]] , [[0,2], [1,3], [2,2]]],
-        [[[1,0],[1,1], [1,2], [2,1]],[[2,0],[1,2],[2,2]], [[2,1],[1,3], [1,4]]]];
+        [[[1,0],[1,1], [1,2], [2,1]],[[2,0],[1,2],[2,2]], [[2,1],[1,3], [1,2],[1,4]]]];
 
     export interface playerPosition{
         line:number;
@@ -157,11 +157,11 @@ module gameLogic {
     }else{
       var id:number;
 
-      if(pawnID == 1){
+      if(pawnID === 1){
         id = 0;
-      }else if(pawnID == 2){
+      }else if(pawnID === 2){
         id =1;
-      }else{
+      }else if(pawnID === 3){
         id = 2;
       }
 
@@ -200,12 +200,13 @@ module gameLogic {
       dogPosition[pawnID-1].line = row;
       dogPosition[pawnID-1].column = col;
     }
+    incrementTurn();
     var winner = getWinner(boardAfterMove);
 
 
     var firstOperation: IOperation;
     if (winner !== '' ) {
-
+      console.log("someone won");
       // Game over.
       firstOperation = {endMatch: {endMatchScores:
           winner === 'D' ? [1, 0] : winner === 'B' ? [0, 1] : [0, 0]}};
@@ -223,12 +224,31 @@ module gameLogic {
   }
 //checks if the game is over
   export function getWinner(board: Board): string {
+    var bunnyCol:number = bunnyPosition.column;
+    var dogCol: number[] = [dogPosition[0].column, dogPosition[1].column, dogPosition[2].column];
+    if(bunnyPosition.line === 1){
+      bunnyCol = bunnyPosition.column - 1;
+    }
+    if(dogPosition[0].line === 1){
+      dogCol[0] = dogPosition[0].column -1;
+    }
 
+    if(dogPosition[1].line === 1){
+      dogCol[1] = dogPosition[1].column -1;
+    }
+
+    if(dogPosition[2].line === 1){
+      dogCol[2] = dogPosition[2].column -1;
+    }
+    /*
     if(bunnyPosition.column <= dogPosition[0].column &&
         bunnyPosition.column <= dogPosition[1].column &&
         bunnyPosition.column <= dogPosition[2].column){
+      return 'B';*/
+    if(bunnyCol <= dogCol[0] && bunnyCol <= dogCol[1] && bunnyCol <= dogCol[2]){
       return 'B';
     }else if(turnsTake===20){
+      console.log(" more than twenty moves");
       return 'B';
     }else if(bunnyBlocked(board)){
 

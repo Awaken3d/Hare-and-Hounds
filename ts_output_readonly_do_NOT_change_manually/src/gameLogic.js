@@ -5,9 +5,9 @@ var gameLogic;
         [[[0, 0], [1, 1], [2, 0]], [[0, 0], [1, 2], [2, 0]], [[0, 1], [2, 1], [0, 2], [1, 3], [2, 2]],
             [[0, 2], [2, 2], [1, 4]], []], [[[1, 1], [1, 2], [2, 1]], [[1, 2], [2, 2]], [[1, 3], [1, 4]]]];
     gameLogic.legalMovesBunny = [[[[1, 0], [0, 1], [1, 1], [1, 2]], [[0, 0], [0, 2], [1, 2]], [[0, 1], [1, 2], [1, 3], [1, 4]]],
-        [[], [[1, 0], [0, 0], [1, 2], [2, 0]], [[2, 1], [1, 1], [0, 1], [2, 1], [0, 2], [1, 3], [2, 2]],
+        [[], [[1, 0], [0, 0], [1, 2], [2, 0]], [[0, 0], [0, 1], [0, 2], [1, 1], [1, 3], [2, 0], [2, 1], [2, 2]],
             [[1, 2], [0, 2], [2, 2], [1, 4]], [[0, 2], [1, 3], [2, 2]]],
-        [[[1, 0], [1, 1], [1, 2], [2, 1]], [[2, 0], [1, 2], [2, 2]], [[2, 1], [1, 3], [1, 4]]]];
+        [[[1, 0], [1, 1], [1, 2], [2, 1]], [[2, 0], [1, 2], [2, 2]], [[2, 1], [1, 3], [1, 2], [1, 4]]]];
     gameLogic.bunnyPosition = { line: 0, column: 0 };
     gameLogic.dogPosition = [{ line: 0, column: 0 }, { line: 0, column: 0 }, { line: 0, column: 0 }];
     /** sets initial positions for the bunny and the dogs */
@@ -119,13 +119,13 @@ var gameLogic;
         }
         else {
             var id;
-            if (pawnID == 1) {
+            if (pawnID === 1) {
                 id = 0;
             }
-            else if (pawnID == 2) {
+            else if (pawnID === 2) {
                 id = 1;
             }
-            else {
+            else if (pawnID === 3) {
                 id = 2;
             }
             var existsInLegalMoves2 = false;
@@ -155,9 +155,11 @@ var gameLogic;
             gameLogic.dogPosition[pawnID - 1].line = row;
             gameLogic.dogPosition[pawnID - 1].column = col;
         }
+        incrementTurn();
         var winner = getWinner(boardAfterMove);
         var firstOperation;
         if (winner !== '') {
+            console.log("someone won");
             // Game over.
             firstOperation = { endMatch: { endMatchScores: winner === 'D' ? [1, 0] : winner === 'B' ? [0, 1] : [0, 0] } };
         }
@@ -173,12 +175,30 @@ var gameLogic;
     gameLogic.createMove = createMove;
     //checks if the game is over
     function getWinner(board) {
-        if (gameLogic.bunnyPosition.column <= gameLogic.dogPosition[0].column &&
-            gameLogic.bunnyPosition.column <= gameLogic.dogPosition[1].column &&
-            gameLogic.bunnyPosition.column <= gameLogic.dogPosition[2].column) {
+        var bunnyCol = gameLogic.bunnyPosition.column;
+        var dogCol = [gameLogic.dogPosition[0].column, gameLogic.dogPosition[1].column, gameLogic.dogPosition[2].column];
+        if (gameLogic.bunnyPosition.line === 1) {
+            bunnyCol = gameLogic.bunnyPosition.column - 1;
+        }
+        if (gameLogic.dogPosition[0].line === 1) {
+            dogCol[0] = gameLogic.dogPosition[0].column - 1;
+        }
+        if (gameLogic.dogPosition[1].line === 1) {
+            dogCol[1] = gameLogic.dogPosition[1].column - 1;
+        }
+        if (gameLogic.dogPosition[2].line === 1) {
+            dogCol[2] = gameLogic.dogPosition[2].column - 1;
+        }
+        /*
+        if(bunnyPosition.column <= dogPosition[0].column &&
+            bunnyPosition.column <= dogPosition[1].column &&
+            bunnyPosition.column <= dogPosition[2].column){
+          return 'B';*/
+        if (bunnyCol <= dogCol[0] && bunnyCol <= dogCol[1] && bunnyCol <= dogCol[2]) {
             return 'B';
         }
         else if (gameLogic.turnsTake === 20) {
+            console.log(" more than twenty moves");
             return 'B';
         }
         else if (bunnyBlocked(board)) {

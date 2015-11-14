@@ -38,8 +38,8 @@ export function handleDragEvent(type: string, clientX: number, clientY: number){
     var y = clientY - gameArea.offsetTop;
     //console.log("client x is "+clientX);
     //console.log("client y is "+clientY);
-    console.log(" client offset left is "+gameArea.offsetLeft);
-    console.log(" client offset top is "+gameArea.offsetTop);
+    //console.log(" client offset left is "+gameArea.offsetLeft);
+    //console.log(" client offset top is "+gameArea.offsetTop);
 
     var col = Math.floor(5 * x / gameArea.clientWidth);
     var row = Math.floor(3 * y / gameArea.clientHeight);
