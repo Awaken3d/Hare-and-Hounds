@@ -98,7 +98,7 @@ var game;
         // need to rotate the angle if playWhite
         try {
             getPawnId(deltaFrom.row, deltaFrom.col);
-            var move = gameLogic.createMove(state.board, pawnId, deltaTo.row, deltaTo.col, lastUpdateUI.turnIndexAfterMove);
+            var move = gameLogic.createMove(state.board, deltaFrom, deltaTo, lastUpdateUI.turnIndexAfterMove);
             //let move = gameLogic.createMove(state.board, pawnId,row, col, lastUpdateUI.turnIndexAfterMove);
             canMakeMove = false;
             gameService.makeMove(move);

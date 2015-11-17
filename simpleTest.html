@@ -3,14 +3,24 @@
 <head>
   <script crossorigin="anonymous" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <script>
-  var move = gameLogic.createMove(undefined, 0, 0, 0);
+  /*var move = gameLogic.createMove([['D1', '', ''],
+    ['D2','', '', '', 'B'],
+    ['D3', '', '']], {row:1,col:2}, {row:1,col:1}, 1);*/
+    var move = gameLogic.createMove(undefined, {row:0,col:0}, {row:0,col:1}, 0);
   console.log("move=", move);
   var params = {turnIndexBeforeMove: 0,
     stateBeforeMove: {},
     move: move};
-  var res = gameLogic.isMoveOk(params);
+var res = gameLogic.isMoveOk(params);
   console.log("params=", params, "result=", res);
+  console.log("creating random move for dog");
+  var resDog = aiService.createComputerMove(undefined, 0);
+  console.log(resDog);
+  console.log("creating random move for bunny");
+  var resBunny = aiService.createComputerMove(undefined, 1);
+  console.log(resBunny);
   </script>
 </head>
 <body>

@@ -122,7 +122,7 @@ export function handleDragEvent(type: string, clientX: number, clientY: number){
 
     try {
       getPawnId(deltaFrom.row, deltaFrom.col);
-      let move = gameLogic.createMove(state.board, pawnId, deltaTo.row, deltaTo.col, lastUpdateUI.turnIndexAfterMove);
+      let move = gameLogic.createMove(state.board, deltaFrom, deltaTo, lastUpdateUI.turnIndexAfterMove);
       //let move = gameLogic.createMove(state.board, pawnId,row, col, lastUpdateUI.turnIndexAfterMove);
       canMakeMove = false;
       gameService.makeMove(move);
