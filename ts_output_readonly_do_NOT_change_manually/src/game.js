@@ -52,7 +52,7 @@ var game;
         if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
             var curPiece = state.board[row][col];
             //console.log("curPiece is "+curPiece);
-            if (curPiece) {
+            if (curPiece !== '') {
                 deltaFrom = { row: row, col: col };
                 getId(row, col);
                 //console.log("pawnTag is "+pawnTag);
@@ -74,7 +74,9 @@ var game;
             }*/
             deltaTo = { row: row, col: col };
             console.log("delta to " + deltaTo.row + " and delta col is " + deltaTo.col);
-            dragDoneHandler(deltaFrom, deltaTo);
+            if (state.board[deltaFrom.row][deltaFrom.col] !== '') {
+                dragDoneHandler(deltaFrom, deltaTo);
+            }
         }
         else {
         }
