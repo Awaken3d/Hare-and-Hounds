@@ -1,3 +1,32 @@
+body {
+    //background-image: url("imgs/bw2.jpg");
+    background-color: #cccccc;
+    background-repeat:no-repeat;
+
+}
+img:hover{
+  border-left:5px gray solid;
+  //border-right:5px gray solid;
+}
+.row {
+    background: #ccc;
+    //border-top: black solid;
+    //border-bottom: black solid;
+}
+.item {
+    float:left;
+    background: white;
+    width: 20%;
+    height: 100%;
+    border-left: 1px black solid;
+    border-top: 1px black solid;
+}
+.item:hover {
+    background:gray;
+    //border-left:5px gray solid;
+    //border-right:5px gray solid;
+}
+
 .r {
   border-right: 4pt solid white;
 }

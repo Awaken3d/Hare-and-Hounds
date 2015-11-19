@@ -232,135 +232,6 @@ var gameLogic;
             { set: { key: 'deltaTo', value: { row: deltaTo.row, col: deltaTo.col } } }];
     }
     gameLogic.createMove = createMove;
-    /*uses pawn id to identify which dog was chosen to move, the existence of var id is redundant since a simple
-    * subtraction from pawnId can yield the same results, fix it*/
-    /*export function createMove(
-        board: Board,pawnID:number, row: number , col: number, turnIndexBeforeMove: number): IMove {
-      var moveArray:number[] = [row, col];
-      console.log(" creating move to row "+row + " and col "+col );
-      console.log( "and id is "+pawnID);
-      //console.log(moveArray);
-      if (!board) {
-        // Initially (at the beginning of the match), the board in state is undefined.
-        board = getInitialBoard();
-      }
-  
-        if(col < 0){
-            throw new Error("Column value cannot be lower than 0");
-        }
-  
-        if(row < 0){
-            throw new Error("Row value cannot be lower than 0");
-        }else if(row >2){
-            throw new Error("Row value cannot be higher than 2");
-        }
-  
-        if(row == 1 && col > 4 ){
-            throw new Error("Column value is too high");
-        }else if((row === 0 || row === 2) && col >2){
-            throw new Error("Column value is too high");
-        }
-  
-      if (board[row][col] !== '') {
-        throw new Error("One can only make a move in an empty position!");
-      }
-  
-  
-      if (getWinner(board) !== '') {
-  
-        throw new Error("Can only make a move if the game is not over!");
-      }
-  
-  
-      if(turnIndexBeforeMove === 1){
-  
-  
-        var existsInLegalMoves:boolean = false;
-        //for(var i in legalMovesBunny){
-        for(var i=0 ; i< legalMovesBunny[bunnyPosition.line][bunnyPosition.column].length;i++){
-  
-          //console.log("arrays checked " + legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i]);
-          //console.log("value of i is "+i);
-  
-          if(arraysEqual(moveArray, legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i])){
-            existsInLegalMoves = true;
-  
-          }
-        }
-  
-        if(!existsInLegalMoves){
-  
-          throw new Error("Cannot move there bunny!");
-        }
-  
-      } else{
-        var id:number;
-  
-        if(pawnID === 1){
-          id = 0;
-        }else if(pawnID === 2){
-          id =1;
-        }else if(pawnID === 3){
-          id = 2;
-        }
-  
-        var existsInLegalMoves2:boolean = false;
-  
-         //for(var i in legalMovesDog){
-         for(var i = 0;i< legalMovesDog[dogPosition[id].line][dogPosition[id].column].length; i++){
-           //console.log("arrays checked " + legalMovesBunny[bunnyPosition.line][bunnyPosition.column][i]);
-           //console.log("value of i is "+i);
-          if(arraysEqual(moveArray, legalMovesDog[dogPosition[id].line][dogPosition[id].column][i])){
-  
-            existsInLegalMoves2 = true;
-          }
-        }
-  
-        if(!existsInLegalMoves2){
-  
-          throw new Error("Cannot move there dog!");
-  
-        }
-  
-  
-      }
-  
-      // var boardAfterMove = angular.copy(board);
-      var boardAfterMove = copy(board);
-  
-      if(turnIndexBeforeMove === 1){
-        boardAfterMove[bunnyPosition.line][bunnyPosition.column] = '';
-        boardAfterMove[row][col] = 'B';
-        bunnyPosition.line = row;
-        bunnyPosition.column = col;
-      }else{
-        boardAfterMove[dogPosition[pawnID-1].line][dogPosition[pawnID-1].column] = '';
-        boardAfterMove[row][col] = 'D'+""+(pawnID);
-        dogPosition[pawnID-1].line = row;
-        dogPosition[pawnID-1].column = col;
-      }
-      incrementTurn();
-      var winner = getWinner(boardAfterMove);
-  
-  
-      var firstOperation: IOperation;
-      if (winner !== '' ) {
-        console.log("someone won");
-        // Game over.
-        firstOperation = {endMatch: {endMatchScores:
-            winner === 'D' ? [1, 0] : winner === 'B' ? [0, 1] : [0, 0]}};
-      } else {
-        // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
-        firstOperation = {setTurn: {turnIndex: 1 - turnIndexBeforeMove}};
-      }
-      var delta: BoardDelta = {row: row, col: col};
-  
-  
-  
-      return [firstOperation,
-        {set: {key: 'board', value: boardAfterMove}},
-        {set: {key: 'delta', value: delta}}];
-    }*/
     //checks if the game is over
     function getWinner(board) {
         var bunnyCol;
@@ -382,11 +253,6 @@ var gameLogic;
                 dogCol[i] = dogPositions[i].col;
             }
         }
-        /*
-        if(bunnyPosition.column <= dogPosition[0].column &&
-            bunnyPosition.column <= dogPosition[1].column &&
-            bunnyPosition.column <= dogPosition[2].column){
-          return 'B';*/
         if (bunnyCol <= dogCol[0] && bunnyCol <= dogCol[1] && bunnyCol <= dogCol[2]) {
             console.log("bunny won");
             return 'B';
@@ -402,51 +268,6 @@ var gameLogic;
         return '';
     }
     gameLogic.getWinner = getWinner;
-    /*
-    export function getWinner(board: Board): string {
-      var bunnyCol:number;
-      var dogCol: number[];
-      var bunnyPosition:BoardDelta = getBunnyPosition(board);
-      var dogPositions:BoardDelta[] = getDogPositions(board);
-      if(bunnyPosition.row === 1){
-        bunnyCol = bunnyPosition.col - 1;
-      }
-  
-      for(var i = 0; i < dogPositions.length;i++){
-        if(dogPositions[i].row === 1){
-          dogCol[i] = dogPositions[i].col - 1;
-        }
-      }
-  
-      if(dogPositions[0]. === 1){
-        dogCol[0] = dogPosition[0].column -1;
-      }
-  
-      if(dogPosition[1].line === 1){
-        dogCol[1] = dogPosition[1].column -1;
-      }
-  
-      if(dogPosition[2].line === 1){
-        dogCol[2] = dogPosition[2].column -1;
-      }
-  
-      if(bunnyPosition.column <= dogPosition[0].column &&
-          bunnyPosition.column <= dogPosition[1].column &&
-          bunnyPosition.column <= dogPosition[2].column){
-        return 'B';
-      if(bunnyCol <= dogCol[0] && bunnyCol <= dogCol[1] && bunnyCol <= dogCol[2]){
-        return 'B';
-      }else if(turnsTake===20){
-        console.log(" more than twenty moves");
-        return 'B';
-      }else if(bunnyBlocked(board)){
-  
-        return 'D';
-      }
-  
-      return '';
-  
-    }*/
     function isMoveOk(params) {
         /*
                 var move = params.move;

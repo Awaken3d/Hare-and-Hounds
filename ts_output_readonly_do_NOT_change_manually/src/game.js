@@ -1,10 +1,9 @@
 var game;
 (function (game) {
-    game.testString = "hello";
     var animationEnded = false;
     var numberOfClicks = 0; //counts the number of clicks to make sure that a legitimate pawn was selected to move
-    var rowToMove;
-    var colToMove;
+    //let rowToMove:number;
+    //let colToMove:number;
     var canMakeMove = false;
     var isComputerTurn = false;
     var lastUpdateUI = null;
@@ -16,11 +15,15 @@ var game;
     var pawnId;
     var draggingPiece;
     var gameArea;
-    function sayHello() {
-        console.log(this.testString);
+    function getSource(row, col) {
+        if (state.board[row][col].charAt(0) === 'B') {
+            return "rabbit";
+        }
+        else {
+            return "dog";
+        }
     }
-    game.sayHello = sayHello;
-    ;
+    game.getSource = getSource;
     function printBoard() {
         for (var i = 0; i < state.board.length; i++) {
             for (var j = 0; j < state.board[i].length; j++) {
@@ -42,7 +45,7 @@ var game;
         if (row === 0 || row === 2) {
             col = col - 1;
         }
-        //console.log(" you clicked on square "+col+" "+row);
+        console.log(" you clicked on square " + col + " " + row);
         var res = getSquareWidthHeight();
         //console.log("called square eidth height width: "+res.width+" and height is "+ res.height);
         //if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
@@ -65,10 +68,10 @@ var game;
         }
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
-            //console.log(" got into touchend if and the type is "+type);
-            if (row === 0 && row === 2) {
-                col = col - 1;
-            }
+            console.log(" got into touchend if and the type is " + type);
+            /*if(row === 0 && row === 2){
+              col = col-1;
+            }*/
             deltaTo = { row: row, col: col };
             console.log("delta to " + deltaTo.row + " and delta col is " + deltaTo.col);
             dragDoneHandler(deltaFrom, deltaTo);
@@ -117,6 +120,7 @@ var game;
     function getId(row, col) {
         if (state.board[row][col]) {
             game.pawnTag = state.board[row][col].charAt(0);
+            //pawnTag = "rabbit";
             if (game.pawnTag === 'D') {
                 game.pawnTag = state.board[row][col].charAt(1);
             }
@@ -197,16 +201,8 @@ var game;
             params.playersInfo[params.yourPlayerIndex].playerId === '';
         console.log("is the computer working? " + isComputerTurn);
         if (isComputerTurn) {
-            // To make sure the player won't click something and send a move instead of the computer sending a move.
             canMakeMove = false;
-            // We calculate the AI move only after the animation finishes,
-            // because if we call aiService now
-            // then the animation will be paused until the javascript finishes.
-            //if (!state.delta) {
-            console.log("calling send computer move");
-            // This is the first move in the match, so
-            // there is not going to be an animation, so
-            // call sendComputerMove() now (can happen in ?onlyAIs mode)
+            //console.log("calling send computer move");
             sendComputerMove();
         }
     }
@@ -224,43 +220,6 @@ var game;
         }
     }
     game.getPawnId = getPawnId;
-    /*export function cellClicked(row: number, col: number): void {
-      log.info(["Clicked on cell:", row, col]);
-      if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
-        throw new Error("Throwing the error because URL has '?throwException'");
-      }
-      if (!canMakeMove) {
-        return;
-      }
-      if(numberOfClicks === 0){
-        if(state.board[row][col]){
-        if(state.board[row][col].charAt(0) === 'D'){
-          pawnId = +state.board[row][col].charAt(1);
-        }else{
-          pawnId = 4;
-        }
-        numberOfClicks++;
-        }else{
-          console.log("You clicked on an empty space!!");
-  
-        }
-      }else{
-      try {
-      //  let move = gameLogic.createMove(
-        //    state.board, 1,row, col, lastUpdateUI.turnIndexAfterMove);
-            let move = gameLogic.createMove(
-                state.board, pawnId,row, col, lastUpdateUI.turnIndexAfterMove);
-                console.log("index used and sent "+ lastUpdateUI.turnIndexAfterMove);
-        canMakeMove = false; // to prevent making another move
-        gameService.makeMove(move);
-        numberOfClicks = 0;
-      } catch (e) {
-        //log.info(["Cell is already full in position:", row, col]);
-        log.info(e);
-        return;
-      }
-    }
-  }*/
     function shouldShowImage(row, col) {
         var cell = state.board[row][col];
         return cell !== "";

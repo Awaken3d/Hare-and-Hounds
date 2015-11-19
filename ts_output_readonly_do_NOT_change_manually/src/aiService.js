@@ -1,14 +1,5 @@
 var aiService;
 (function (aiService) {
-    /** Returns the move that the computer player should do for the given updateUI. */
-    /*export function findComputerMove(updateUI: IUpdateUI): IMove {
-      return createComputerMove(
-          updateUI.stateAfterMove.board,
-          updateUI.pawnId,
-          updateUI.turnIndexAfterMove,
-          // at most 1 second for the AI to choose a move (but might be much quicker)
-          {millisecondsLimit: 1000})
-    }*/
     function createComputerMove(board, playerIndex) {
         console.log("ai has been summoned");
         if (board === undefined) {
