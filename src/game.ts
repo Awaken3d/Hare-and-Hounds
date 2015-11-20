@@ -49,21 +49,31 @@ export function handleDragEvent(type: string, clientX: number, clientY: number){
     var row = Math.floor(3 * y / gameArea.clientHeight);
 
     if(row === 0 || row === 2){
+      //console.log("kanw tin allagi kai to col einai "+col);
       col = col - 1;
+      //console.log("to col meta tin allagi einai "+col);
     }
-    console.log(" you clicked on square "+col+" "+row);
+    /*
+    if(row === 1){
+      col = col - 1;
+    }*/
+    console.log(" you clicked on square "+row+" "+col);
     var res = getSquareWidthHeight();
     //console.log("called square eidth height width: "+res.width+" and height is "+ res.height);
     //if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
-
+    console.log("row and col is "+row +" "+col);
     if (type === "touchstart" && deltaFrom.row < 0 && deltaFrom.col < 0) {
+
         var curPiece = state.board[row][col];
-        //console.log("curPiece is "+curPiece);
+
+        console.log("curPiece is "+curPiece);
         if (curPiece !== '') {
+          console.log("mpike me lathos curr piece");
           deltaFrom = { row: row, col: col };
           getId(row, col);
-          //console.log("pawnTag is "+pawnTag);
+          console.log("pawnTag is "+pawnTag);
           draggingPiece = document.getElementById(pawnTag);
+          console.log("to dragging piece einai "+draggingPiece);
           if (draggingPiece) {
 
             draggingPiece.style['width'] = '115%';
@@ -71,24 +81,34 @@ export function handleDragEvent(type: string, clientX: number, clientY: number){
             // draggingPiece.style['top'] = '10%';
             // draggingPiece.style['left'] = '10%';
             draggingPiece.style['position'] = 'absolute';
+          }else{
+            console.log("wrong move again");
           }
         }
 
 
     }
 
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+    if ((deltaFrom.row > -1 && deltaFrom.col > -1) &&(type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup")) {
     // drag ended
     console.log(" got into touchend if and the type is "+type);
     /*if(row === 0 && row === 2){
       col = col-1;
     }*/
     deltaTo = { row: row, col: col };
-
-    console.log("delta to "+deltaTo.row+" and delta col is "+deltaTo.col);
-    if(state.board[deltaFrom.row][deltaFrom.col] !== ''){
+    console.log(" mpika sto touchend");
+    console.log("delta from row is "+ deltaFrom.row+"delta from col is "+deltaFrom.col+"delta to "+deltaTo.row+" and deltato col is "+deltaTo.col);
+    if(deltaFrom.row !== deltaTo.row || deltaFrom.col !== deltaTo.col ){
+      console.log("mpainei mesa meta tin allagi");
+    if(state.board[deltaFrom.row][deltaFrom.col] !== ''  ){
+      console.log("mpainei mesa meta tin allagi 2");
     dragDoneHandler(deltaFrom, deltaTo);
-    }
+  }}else{
+    //deltaFrom = { row: -1, col: -1 };
+    //deltaTo = { row: -1, col: -1 };
+    //draggingPiece = null;
+    console.log("wrong type of move");
+  }
   } else {
     // drag continue
     //setDraggingPieceTopLeft(getSquareTopLeft(row, col));
@@ -96,7 +116,7 @@ export function handleDragEvent(type: string, clientX: number, clientY: number){
   }
 
 
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+    if ((deltaFrom.row > -1 && deltaFrom.col > -1) &&(type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup")) {
 
       draggingPiece.style['width'] = '100%';
       draggingPiece.style['height'] = '100%';
@@ -146,7 +166,7 @@ function getSquareWidthHeight(): WidthHeight {
   }
 
 export function getId(row:number, col:number){
-  if(state.board[row][col]){
+  if(state.board[row][col] && state.board[row][col] !== ''){
     pawnTag = state.board[row][col].charAt(0);
     //pawnTag = "rabbit";
     if(pawnTag === 'D'){
