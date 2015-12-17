@@ -2,6 +2,7 @@
 <!-- build:[manifest] game.appcache -->
 <html lang="en" ng-app="myApp" ng-strict-di>
 <!-- /build -->
+
 <head>
   <meta charset="utf-8">
   <title>Hare and Hounds</title>
@@ -37,20 +38,22 @@
 
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
-<body bgcolor= "#E6E6FA" ng-cloak >
+
+<body bgcolor="#E6E6FA" ng-cloak>
 
 
   <div style="position:absolute; bottom:5px; left: 5px; z-index:10;">
-    <span ng-click="game.isHelpModalShown = true"
-        class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+    <span ng-click="game.isHelpModalShown = true" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
   </div>
 
-  <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
+  <!-- <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
     <div class="modal-backdrop in"></div>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
           <h4 class="modal-title" id="myModalLabel">
             {{ 'RULES_OF_HARE_AND_HOUNDS' | translate }}
           </h4>
@@ -64,8 +67,8 @@
                     {{ 'RULES_SLIDE1' | translate }}
                   </td>
                   <td>
-                  <!--  <img src="imgs/HelpSlide1.png" style="height:100px;">-->
-                </td>
+
+                  </td>
                 </tr>
               </table>
             </slide>
@@ -73,11 +76,106 @@
               <table>
                 <tr>
                   <td>
-                  {{ 'RULES_SLIDE2' | translate }}
+                    {{ 'RULES_SLIDE2' | translate }}
                   </td>
                   <td>
-                  <!--  <img src="imgs/HelpSlide2.png" style="height:100px;">-->
-                 </td>
+
+                  </td>
+                </tr>
+              </table>
+            </slide>
+          </carousel>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" ng-click="game.isHelpModalShown = false">
+            {{ 'CLOSE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
+    <div class="modal-backdrop in"></div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">
+            {{ 'RULES_OF_JUNGLE' | translate }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <carousel style="height: 200px">
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE1' | translate }}
+                  </td>
+                  <td>
+                    <!-- <img src="imgs/HelpSlide1.gif" style="height:160px; width: 125px;"> -->
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE2' | translate }}
+                  </td>
+                  <td>
+                    <!-- <img src="imgs/HelpSlide2.gif" style="height:160; width: 125px;"> -->
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE3' | translate }}
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE4' | translate }}
+                  </td>
+                  <td>
+                    <!-- <img src="imgs/HelpSlide3.gif" style="height:160; width: 125px;"> -->
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE5' | translate }}
+                  </td>
+                  <td>
+                    <!-- <img src="imgs/HelpSlide4.gif" style="height:160; width: 125px;"> -->
+                  </td>
+                </tr>
+              </table>
+            </slide>
+            <slide>
+              <table>
+                <tr>
+                  <td>
+                    {{ 'RULES_SLIDE6' | translate }}
+                  </td>
+                  <td>
+                    <!-- <img src="imgs/HelpSlide5.gif" style="height:160; width: 125px;"> -->
+                  </td>
                 </tr>
               </table>
             </slide>
@@ -91,58 +189,28 @@
       </div>
     </div>
   </div>
-  <div id="gameArea" style="position:absolute; top:0%; left:0; width:100%; height:100%;"  >
 
-             <div class="row"  ng-repeat="row in [0,1,2]" style="position:absolute; top:{{row*33}}%; left:0%; width:100%; height:33%">
-                 <div class="item" ng-repeat="col in game.getArray(row)"  style="position:absolute; top:0;left: {{game.getColumn(row, col)*20}}%;width:20%; height:100%">
-                   <!--<div class="item" ng-repeat="col in game.getArray(row)" ng-click = "game.cellClicked(row,col)" style="position:absolute; top:0;left: {{game.getColumn(row, col)*20}}%;width:20%; height:100%">-->
-                   <img ng-if="game.getId(row, col)" id = "{{game.pawnTag}}" src="imgs/{{game.getSource(row,col)}}.jpg" alt="{{game.pawnTag}}"  width=100% height=100% />
-                  <!-- <svg ng-if="game.getId(row, col)" id = "{{game.pawnTag}}" width="100%" height="100%">
+
+  <div id="gameArea" style="position:absolute; top:0%; left:0; width:100%; height:100%;">
+
+    <div class="row" ng-repeat="row in [0,1,2]" style="position:absolute; top:{{row*33}}%; left:0%; width:100%; height:33%">
+      <div class="item" ng-repeat="col in game.getArray(row)" style="position:absolute; top:0;left: {{game.getColumn(row, col)*20}}%;width:20%; height:100%">
+        <!--<div class="item" ng-repeat="col in game.getArray(row)" ng-click = "game.cellClicked(row,col)" style="position:absolute; top:0;left: {{game.getColumn(row, col)*20}}%;width:20%; height:100%">-->
+        <img ng-if="game.getId(row, col)" id="{{game.pawnTag}}" src="imgs/{{game.getSource(row,col)}}.jpg" alt="{{game.pawnTag}}" width=100% height=100% />
+        <!-- <svg ng-if="game.getId(row, col)" id = "{{game.pawnTag}}" width="100%" height="100%">
                        <g>
                            <rect x="0" y="0" width="100%" height="100%" stroke="yellow" stroke-width="8" fill="green" />-->
-                           <!--<text x="35%" y="60%" font-family="Verdana" font-size="150%" fill="blue">{{game.pawnTag}}</text>-->
-                          <!-- <text  x="35%" y="60%" font-family="Verdana" fill="blue">{{game.pawnTag}}</text>
+        <!--<text x="35%" y="60%" font-family="Verdana" font-size="150%" fill="blue">{{game.pawnTag}}</text>-->
+        <!-- <text  x="35%" y="60%" font-family="Verdana" fill="blue">{{game.pawnTag}}</text>
                        </g>
                    </svg>-->
-                 </div>
-
-                <!--  <div class="cell"  ng-if="row!=1" ng-repeat="col in game.getArray(row)" ng-click = "game.cellClicked(row,col-1)" style="position:absolute; top:0;left: {{col*20}}%;width:20%; height:100%"></div>-->
-
-             </div>
-          </div>
-<!--<div id="gameArea">
-  <div ng-repeat="row in [0, 1, 2]"
-      style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
-    <div ng-repeat="col in [0, 1, 2]"
-        style="position:absolute; top:0; left:{{col * 33}}%; width:33%; height:100%;"
-        ng-class="{r: col < 2, b: row < 2}"
-        ng-click="game.cellClicked(row, col)"
-        id="{{'e2e_test_div_' + row + 'x' + col}}">
-      <div style="width:100%; height: 100%"
-          ng-class="{slowlyAppear: game.shouldSlowlyAppear(row, col)}"
-          ng-if="game.shouldShowImage(row, col)">
-        <svg ng-if="game.isPieceO(row, col)"
-            id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <circle cx="50%" cy="50%" r="27%"
-            stroke="blue" stroke-width="5%" fill="white" />
-        </svg>
-        <svg ng-if="game.isPieceX(row, col)"
-            id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
-            width="100%" height="100%">
-          <line x1="25%" y1="25%"
-                x2="75%" y2="75%"
-                stroke="red"
-                stroke-width="5%"/>
-          <line x1="25%" y1="75%"
-                x2="75%" y2="25%"
-                stroke="red"
-                stroke-width="5%"/>
-        </svg>
       </div>
+
+      <!--  <div class="cell"  ng-if="row!=1" ng-repeat="col in game.getArray(row)" ng-click = "game.cellClicked(row,col-1)" style="position:absolute; top:0;left: {{col*20}}%;width:20%; height:100%"></div>-->
+
     </div>
   </div>
-</div>-->
 
 </body>
+
 </html>
