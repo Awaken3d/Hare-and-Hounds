@@ -4,10 +4,24 @@ body {
     background-repeat:no-repeat;
 
 }
+/*
+.testTable{
+
+
+}
+
+.tableRow{
+  height:100%;width:100%;
+  position:absolute;
+
+}*/
+
+
+/*
 img:hover{
   border-left:5px gray solid;
   //border-right:5px gray solid;
-}
+}*/
 .row {
     background: #ccc;
     //border-top: black solid;
@@ -40,9 +54,10 @@ img:hover{
 .cell {
     border:1px solid green
 }
+/*
 #center {
     border:5px solid red
-}
+}*/
 
 .slowlyAppear {
 	-webkit-animation: slowlyAppear 0.5s linear;
@@ -68,7 +83,8 @@ img:hover{
   from {opacity: 0.1;}
   to {opacity: 1;}
 }
-
+/*
 td {
   padding:0 5px 0 5px;
-}
+  text-align:center;
+}*/
