@@ -47,7 +47,7 @@
     <span ng-click="game.isHelpModalShown = true" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
   </div>
 
-  <!-- <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
+  <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
     <div class="modal-backdrop in"></div>
     <div class="modal-dialog">
       <div class="modal-content">
@@ -94,103 +94,9 @@
         </div>
       </div>
     </div>
-  </div> -->
-  <div class="overlayModal" ng-class="{zeroOpacity: !game.isHelpModalShown, oneOpacity: game.isHelpModalShown}" aria-hidden="true">
-    <div class="modal-backdrop in"></div>
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" ng-click="game.isHelpModalShown = false" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">
-            {{ 'RULES_OF_JUNGLE' | translate }}
-          </h4>
-        </div>
-        <div class="modal-body">
-          <carousel style="height: 200px">
-            <slide>
-              <table>
-                <tr>
-                  <td>
-                    {{ 'RULES_SLIDE1' | translate }}
-                  </td>
-                  <td>
-                    <!-- <img src="imgs/HelpSlide1.gif" style="height:160px; width: 125px;"> -->
-                  </td>
-                </tr>
-              </table>
-            </slide>
-            <slide>
-              <table>
-                <tr>
-                  <td>
-                    {{ 'RULES_SLIDE2' | translate }}
-                  </td>
-                  <td>
-                    <!-- <img src="imgs/HelpSlide2.gif" style="height:160; width: 125px;"> -->
-                  </td>
-                </tr>
-              </table>
-            </slide>
-            <slide>
-              <table>
-                <tr>
-                  <td>
-                    {{ 'RULES_SLIDE3' | translate }}
-                  </td>
-                  <td>
-                  </td>
-                </tr>
-              </table>
-            </slide>
-            <slide>
-              <table>
-                <tr>
-                  <td>
-                    {{ 'RULES_SLIDE4' | translate }}
-                  </td>
-                  <td>
-                    <!-- <img src="imgs/HelpSlide3.gif" style="height:160; width: 125px;"> -->
-                  </td>
-                </tr>
-              </table>
-            </slide>
-            <slide>
-              <table>
-                <tr>
-                  <td>
-                    {{ 'RULES_SLIDE5' | translate }}
-                  </td>
-                  <td>
-                    <!-- <img src="imgs/HelpSlide4.gif" style="height:160; width: 125px;"> -->
-                  </td>
-                </tr>
-              </table>
-            </slide>
-            <slide>
-              <table>
-                <tr>
-                  <td>
-                    {{ 'RULES_SLIDE6' | translate }}
-                  </td>
-                  <td>
-                    <!-- <img src="imgs/HelpSlide5.gif" style="height:160; width: 125px;"> -->
-                  </td>
-                </tr>
-              </table>
-            </slide>
-          </carousel>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" ng-click="game.isHelpModalShown = false">
-            {{ 'CLOSE' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
+        
 
   <div id="gameArea" style="position:absolute; top:0%; left:0; width:100%; height:100%;">
 
