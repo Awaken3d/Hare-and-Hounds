@@ -56,36 +56,30 @@
           </h4>
         </div>
         <div class="modal-body">
-          <carousel style="height:250px">
+          <carousel style="height: 150px">
             <slide>
-              <!--<table style="float:center">-->
-              <!--<table class="testTable">
-                <tr style="align:center">-->
-                  <!--<td class="tableRow" style="width:100%;text-align:right;align:center;">-->
-
-
-                  <!--<td class="tableRow">-->
+              <table>
+                <tr>
+                  <td>
                     {{ 'RULES_SLIDE1' | translate }}
-                <!--  </td>-->
-                  <!--<td>
-                    <img src="imgs/HelpSlide1.png" style="height:100px;width:100px;position:right">
-                </td>-->
-              <!--  </tr>-->
-
-
-              <!--</table>-->
+                  </td>
+                  <td>
+                  <!--  <img src="imgs/HelpSlide1.png" style="height:100px;">-->
+                </td>
+                </tr>
+              </table>
             </slide>
             <slide>
-              <!--<table>
+              <table>
                 <tr>
-                  <td>-->
-                  {{ 'RULES_SLIDE2' | translate }}
-                <!--  </td>
                   <td>
-                    <img src="imgs/HelpSlide2.png" style="height:100px;">
+                  {{ 'RULES_SLIDE2' | translate }}
+                  </td>
+                  <td>
+                  <!--  <img src="imgs/HelpSlide2.png" style="height:100px;">-->
                  </td>
                 </tr>
-              </table>-->
+              </table>
             </slide>
           </carousel>
         </div>
@@ -117,7 +111,6 @@
              </div>
           </div>
 <!--<div id="gameArea">
-
   <div ng-repeat="row in [0, 1, 2]"
       style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
     <div ng-repeat="col in [0, 1, 2]"
